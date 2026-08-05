@@ -1,0 +1,29 @@
+{
+  "name": "el-legado-barberia",
+  "version": "1.0.0",
+  "description": "Sitio Web Corporativo de EL Legado Barbería",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/publifix/el-legado-barberia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/publifix/el-legado-barberia/issues"
+  },
+  "homepage": "https://github.com/publifix/el-legado-barberia#readme",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.6",
+    "tailwindcss": "^4.3.3"
+  }
+}
