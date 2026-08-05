@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
 import logoMark from '../assets/images/logo-mark-white.png';
+import labsLogo from '../assets/images/labs-logo.png';
 import { site, navLinks, whatsappLink, defaultWhatsappMessage } from '../lib/site';
 
 const year = new Date().getFullYear();
@@ -91,6 +92,17 @@ const year = new Date().getFullYear();
         <span class="hidden sm:inline">·</span>
         <a href="#contacto" class="transition-colors hover:text-gold">Aviso de privacidad</a>
       </div>
+
+      <a
+        href="https://labs.publifix.net/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Creado por Publifix Labs — abre en una pestaña nueva"
+        class="mt-2 inline-flex items-center gap-2 rounded-full bg-paper px-3.5 py-1.5 opacity-80 transition-opacity hover:opacity-100"
+      >
+        <span class="text-[0.7rem] font-medium text-graphite">Creado por</span>
+        <Image src={labsLogo} alt="Publifix Labs" width={70} height={20} class="h-3.5 w-auto object-contain" />
+      </a>
     </div>
   </div>
 </footer>
