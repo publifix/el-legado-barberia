@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import mainImage from '../assets/images/el-legado-barberia-6.jpg';
+import accentImage from '../assets/images/el-legado-barberia-4.jpg';
+
+const pillars = [
+  {
+    icon: 'lucide:scissors',
+    title: 'Técnica',
+    description: 'Cortes precisos, formados con años de oficio detrás de cada tijera.',
+  },
+  {
+    icon: 'lucide:message-circle-heart',
+    title: 'Asesoría personalizada',
+    description: 'Escuchamos tu estilo antes de tocar tu cabello.',
+  },
+  {
+    icon: 'lucide:armchair',
+    title: 'Ambiente premium',
+    description: 'Espacios de madera natural y acero negro, hechos para desconectar.',
+  },
+];
+---
+
+<section id="experiencia" class="relative overflow-hidden bg-ink py-24 sm:py-32">
+  <div class="container-editorial grid items-center gap-16 lg:grid-cols-2 lg:gap-12">
+    <div class="reveal relative">
+      <div class="relative aspect-[4/5] w-full max-w-lg overflow-hidden rounded-2xl">
+        <Image
+          src={mainImage}
+          alt="Barbero de El Legado perfilando la barba de un cliente frente al letrero de la marca en la barbería"
+          class="h-full w-full object-cover"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 1024px) 32rem, 90vw"
+          loading="lazy"
+        />
+      </div>
+      <div
+        class="absolute -bottom-10 -right-4 w-40 overflow-hidden rounded-xl border-4 border-ink shadow-elevated sm:-right-10 sm:w-56"
+      >
+        <Image
+          src={accentImage}
+          alt="Set de navaja y brocha de afeitar sobre madera natural en El Legado Barbería"
+          class="aspect-square w-full object-cover"
+          widths={[200, 300, 400]}
+          sizes="14rem"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="eyebrow text-gold">La experiencia El Legado</p>
+      <h2 class="mt-4 text-balance font-display text-3xl font-bold leading-tight text-paper sm:text-4xl md:text-5xl">
+        Más que un corte, un ritual de estilo.
+      </h2>
+      <p class="mt-6 text-pretty text-base leading-relaxed text-paper/75 sm:text-lg">
+        Cada visita a El Legado va más allá de un corte de cabello. Combinamos técnica,
+        asesoría personalizada, ambiente premium y atención al detalle para que cada
+        cliente salga con mayor confianza, no solo con mejor apariencia.
+      </p>
+      <p class="mt-4 text-pretty leading-relaxed text-paper/75">
+        Desde que cruzas la puerta, cada detalle está pensado para ti: la luz cálida, el
+        aroma, la atención de nuestro equipo y una plática honesta sobre lo que realmente
+        te favorece. Así entendemos la barbería.
+      </p>
+
+      <ul class="reveal-stagger mt-10 grid gap-6 sm:grid-cols-3">
+        {
+          pillars.map((pillar) => (
+            <li>
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-graphite">
+                <Icon name={pillar.icon} class="h-5 w-5 text-gold" aria-hidden="true" />
+              </span>
+              <h3 class="mt-4 font-display text-base font-semibold text-paper">
+                {pillar.title}
+              </h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-paper/65">{pillar.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>

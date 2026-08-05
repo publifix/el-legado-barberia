@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { site } from '../lib/site';
 
 interface Props {
   title?: string;
@@ -7,9 +8,87 @@ interface Props {
 }
 
 const {
-  title = 'El Legado Barbería',
-  description = 'Sitio web corporativo de El Legado Barbería.',
+  title = `${site.name} | Barbería premium en Querétaro`,
+  description = site.description,
 } = Astro.props;
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(`${base}og-image.jpg`, Astro.site);
+
+const branchGraph = [
+  {
+    name: 'Jardines de la Hacienda',
+    address: 'José Antonio García Jimeno 1001, Jardines de la Hacienda, Querétaro, Qro. 76180',
+    locality: 'Querétaro',
+    postalCode: '76180',
+  },
+  {
+    name: 'Los Arcos',
+    address:
+      'Blvd. Bernardo Quintana Arrioja 12 Planta Baja, Calesa 2da Sección, Santiago de Querétaro, Qro. 76020',
+    locality: 'Santiago de Querétaro',
+    postalCode: '76020',
+  },
+  {
+    name: 'Sonterra',
+    address: 'Avenida Sonterra, Libramiento Norponiente Km. 10.5, Querétaro, Qro. 76230',
+    locality: 'Querétaro',
+    postalCode: '76230',
+  },
+  {
+    name: 'El Mirador',
+    address:
+      'Prolongación Constituyentes Oriente, Residencial del Parque, El Marqués, Qro. 76246',
+    locality: 'El Marqués',
+    postalCode: '76246',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BarberShop',
+      '@id': `${site.url}/#organization`,
+      name: site.name,
+      description: site.description,
+      url: site.url,
+      telephone: site.phoneE164,
+      email: site.email,
+      image: ogImageURL.toString(),
+      priceRange: '$$',
+      sameAs: [site.instagramUrl],
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: site.rating,
+        reviewCount: site.reviewCount,
+      },
+      areaServed: 'Querétaro, México',
+      makesOffer: [
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Corte de Cabello' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Clásico de Barba' } },
+        { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Ritual El Legado' } },
+      ],
+    },
+    ...branchGraph.map((b, i) => ({
+      '@type': 'BarberShop',
+      '@id': `${site.url}/#sucursal-${i + 1}`,
+      name: `${site.name} — ${b.name}`,
+      branchOf: { '@id': `${site.url}/#organization` },
+      telephone: site.phoneE164,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: b.address,
+        addressLocality: b.locality,
+        addressRegion: 'Querétaro',
+        postalCode: b.postalCode,
+        addressCountry: 'MX',
+      },
+    })),
+  ],
+};
 ---
 
 <!doctype html>
@@ -17,11 +96,71 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="theme-color" content="#0B0B0B" />
+    <meta name="color-scheme" content="dark light" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}favicon-32.png`} />
+    <link rel="icon" type="image/png" sizes="16x16" href={`${base}favicon-16.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png`} />
+    <link rel="manifest" href={`${base}site.webmanifest`} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={site.locale} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
-  <body class="bg-neutral-950 text-neutral-100 antialiased">
+  <body class="bg-ink text-paper antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-gold focus:px-5 focus:py-3 focus:font-semibold focus:text-ink"
+    >
+      Saltar al contenido principal
+    </a>
     <slot />
+
+    <script>
+      const revealEls = document.querySelectorAll<HTMLElement>('.reveal, .reveal-stagger');
+
+      if (revealEls.length) {
+        const prefersReducedMotion = window.matchMedia(
+          '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+        if (prefersReducedMotion) {
+          revealEls.forEach((el) => el.classList.add('is-visible'));
+        } else {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  observer.unobserve(entry.target);
+                }
+              }
+            },
+            { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+          );
+          revealEls.forEach((el) => observer.observe(el));
+        }
+      }
+    </script>
   </body>
 </html>

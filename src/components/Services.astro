@@ -1,0 +1,54 @@
+---
+import { Icon } from 'astro-icon/components';
+import { services, whatsappLink } from '../lib/site';
+---
+
+<section id="servicios" class="bg-ivory py-24 text-ink sm:py-32">
+  <div class="container-editorial">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow text-ink/60">Servicios</p>
+      <h2 class="mt-4 text-balance font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+        Cada servicio, una experiencia completa.
+      </h2>
+      <p class="mt-5 text-pretty text-base leading-relaxed text-ink/70 sm:text-lg">
+        No vendemos cortes, vendemos resultados y una hora dedicada por completo a ti.
+        Elige el ritual que más se ajuste a tu estilo.
+      </p>
+    </div>
+
+    <ul class="reveal-stagger mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        services.map((service) => (
+          <li class="group flex h-full flex-col rounded-2xl border border-ink/8 bg-paper p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-elevated">
+            <span class="flex h-12 w-12 items-center justify-center rounded-full bg-ink transition-colors duration-300 group-hover:bg-gold">
+              <Icon
+                name={service.icon}
+                class="h-5 w-5 text-gold transition-colors duration-300 group-hover:text-ink"
+                aria-hidden="true"
+              />
+            </span>
+            <h3 class="mt-5 font-display text-lg font-semibold leading-snug">
+              {service.name}
+            </h3>
+            <p class="mt-2.5 flex-1 text-sm leading-relaxed text-ink/65">
+              {service.description}
+            </p>
+            <a
+              href={whatsappLink(`Hola, me interesa agendar el servicio de ${service.name}.`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-ink"
+            >
+              Reservar
+              <Icon
+                name="lucide:arrow-right"
+                class="h-4 w-4 text-gold transition-transform duration-300 group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { branches } from '../lib/site';
+import { images } from '../lib/images';
+---
+
+<section id="sucursales" class="bg-ink py-24 sm:py-32">
+  <div class="container-editorial">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow text-gold">Nuestras sucursales</p>
+      <h2 class="mt-4 text-balance font-display text-3xl font-bold leading-tight text-paper sm:text-4xl md:text-5xl">
+        Cuatro puntos en Querétaro, un mismo estándar.
+      </h2>
+      <p class="mt-5 text-pretty text-base leading-relaxed text-paper/70 sm:text-lg">
+        Elige la sucursal más cercana a ti. Misma calidad, misma atención, en cualquiera
+        de nuestras cuatro ubicaciones.
+      </p>
+    </div>
+
+    <ul class="reveal-stagger mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        branches.map((branch) => (
+          <li class="group flex flex-col overflow-hidden rounded-2xl bg-graphite">
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <Image
+                src={images[branch.image as keyof typeof images]}
+                alt={`Interior de El Legado Barbería, sucursal ${branch.name}`}
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                widths={[300, 450, 600]}
+                sizes="(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 90vw"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <h3 class="font-display text-lg font-semibold text-paper">{branch.name}</h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-paper/65">
+                {branch.address}
+              </p>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(branch.mapsQuery)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-gold"
+              >
+                <Icon name="lucide:navigation" class="h-4 w-4" aria-hidden="true" />
+                Cómo llegar
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

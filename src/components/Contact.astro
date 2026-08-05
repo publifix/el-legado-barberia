@@ -1,0 +1,108 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site, whatsappLink, defaultWhatsappMessage } from '../lib/site';
+
+/*
+  Mapa embebido reemplazable: para apuntar a una sucursal específica o a una
+  ubicación con coordenadas exactas, sustituye este valor por la URL de
+  "Compartir > Insertar un mapa" de Google Maps, o cambia el texto de la
+  búsqueda por la dirección exacta que se desee mostrar.
+*/
+const mapQuery = 'El Legado Barbería, Querétaro, México';
+const mapEmbedSrc = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`;
+
+const contactMethods = [
+  {
+    icon: 'lucide:phone',
+    label: 'Teléfono',
+    value: site.phoneDisplay,
+    href: `tel:${site.phoneE164}`,
+  },
+  {
+    icon: 'lucide:mail',
+    label: 'Correo',
+    value: site.email,
+    href: `mailto:${site.email}`,
+  },
+  {
+    icon: 'lucide:instagram',
+    label: 'Instagram',
+    value: site.instagramHandle,
+    href: site.instagramUrl,
+  },
+];
+---
+
+<section id="contacto" class="bg-ivory py-24 text-ink sm:py-32">
+  <div class="container-editorial">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow text-ink/60">Contacto</p>
+      <h2 class="mt-4 text-balance font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+        Escríbenos, con gusto te atendemos.
+      </h2>
+      <p class="mt-5 text-pretty text-base leading-relaxed text-ink/70 sm:text-lg">
+        Resolvemos tus dudas y agendamos tu cita por el canal que prefieras.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-10 lg:grid-cols-5 lg:gap-12">
+      <div class="reveal lg:col-span-2">
+        <dl class="space-y-6">
+          {
+            contactMethods.map((method) => (
+              <div class="flex items-start gap-4">
+                <dt>
+                  <span class="flex h-11 w-11 items-center justify-center rounded-full bg-ink">
+                    <Icon name={method.icon} class="h-5 w-5 text-gold" aria-hidden="true" />
+                  </span>
+                  <span class="sr-only">{method.label}</span>
+                </dt>
+                <dd>
+                  <p class="text-xs font-medium uppercase tracking-wide text-ink/60">
+                    {method.label}
+                  </p>
+                  <a
+                    href={method.href}
+                    target={method.icon === 'lucide:instagram' ? '_blank' : undefined}
+                    rel={method.icon === 'lucide:instagram' ? 'noopener noreferrer' : undefined}
+                    class="text-lg font-semibold text-ink transition-colors hover:text-gold"
+                  >
+                    {method.value}
+                  </a>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a
+            href={whatsappLink(defaultWhatsappMessage)}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-gold"
+          >
+            <Icon name="lucide:message-circle" class="h-5 w-5" aria-hidden="true" />
+            WhatsApp
+          </a>
+          <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="btn-outline text-ink">
+            <Icon name="lucide:instagram" class="h-5 w-5" aria-hidden="true" />
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <div class="reveal lg:col-span-3">
+        <div class="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-ink/10 shadow-card sm:aspect-video">
+          <iframe
+            src={mapEmbedSrc}
+            title="Ubicación de El Legado Barbería en Querétaro"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="h-full w-full grayscale-[15%]"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,170 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import StarIcon from './StarIcon.astro';
+import heroImage from '../assets/images/hero-el-legado.jpg';
+import logoMark from '../assets/images/logo-mark-white.png';
+import { site, whatsappLink, defaultWhatsappMessage } from '../lib/site';
+
+const stats = [
+  { icon: 'lucide:star', label: `${site.rating} de calificación` },
+  { icon: 'lucide:users', label: `${site.reviewCount}+ reseñas` },
+  { icon: 'lucide:map-pin', label: `${site.branchCount} sucursales en Querétaro` },
+  { icon: 'lucide:hand-heart', label: 'Atención personalizada' },
+];
+---
+
+<section
+  id="inicio"
+  class="relative flex min-h-dvh items-center justify-center overflow-hidden bg-ink"
+>
+  <div id="hero-bg" class="absolute inset-0">
+    <Image
+      src={heroImage}
+      alt="Barbero de El Legado afeitando la barba de un cliente con navaja, en un ambiente cálido de madera y acero negro"
+      class="h-full w-full object-cover"
+      widths={[640, 960, 1400, 1920, 2400]}
+      sizes="100vw"
+      quality={82}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-ink/80 via-ink/55 to-ink"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="absolute inset-0 bg-ink/25" aria-hidden="true"></div>
+
+  <div class="container-editorial relative z-10 flex flex-col items-center py-32 text-center">
+    <Image
+      src={logoMark}
+      alt=""
+      role="presentation"
+      width={96}
+      height={96}
+      class="animate-fade-in h-16 w-16 object-contain sm:h-20 sm:w-20"
+      loading="eager"
+    />
+
+    <p class="eyebrow animate-fade-in mt-7 text-gold" style="animation-delay: 120ms">
+      {site.name}
+    </p>
+
+    <h1
+      class="animate-fade-in mt-5 max-w-3xl text-balance font-display text-4xl font-bold leading-[1.08] text-paper sm:text-6xl md:text-7xl"
+      style="animation-delay: 200ms"
+    >
+      Donde el estilo se convierte en legado.
+    </h1>
+
+    <p
+      class="animate-fade-in mt-7 max-w-2xl text-pretty text-base leading-relaxed text-paper/80 sm:text-lg"
+      style="animation-delay: 320ms"
+    >
+      Más de 700 clientes nos han calificado con 4.9 estrellas gracias a una experiencia
+      premium, atención personalizada y barberos especializados que entienden tu estilo.
+    </p>
+
+    <div
+      class="animate-fade-in mt-10 flex flex-col items-center gap-4 sm:flex-row"
+      style="animation-delay: 420ms"
+    >
+      <a href={whatsappLink(defaultWhatsappMessage)} target="_blank" rel="noopener noreferrer" class="btn-gold w-full sm:w-auto">
+        <Icon name="lucide:message-circle" class="h-5 w-5" aria-hidden="true" />
+        Agenda por WhatsApp
+      </a>
+      <a href="#sucursales" class="btn-outline w-full text-paper sm:w-auto">
+        <Icon name="lucide:map-pin" class="h-5 w-5" aria-hidden="true" />
+        Conoce nuestras sucursales
+      </a>
+    </div>
+
+    <dl
+      class="animate-fade-in mt-14 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-paper/15 pt-8 sm:flex sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-10"
+      style="animation-delay: 520ms"
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex items-center justify-center gap-2.5 sm:justify-start">
+            {stat.icon === 'lucide:star' ? (
+              <StarIcon class="h-4 w-4 shrink-0 text-gold" />
+            ) : (
+              <Icon name={stat.icon} class="h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
+            )}
+            <dt class="sr-only">Indicador</dt>
+            <dd class="text-xs font-medium tracking-wide text-paper/85 sm:text-sm">
+              {stat.label}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <a
+    href="#experiencia"
+    class="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-paper/70 transition-colors hover:text-gold"
+  >
+    <span class="eyebrow text-[0.65rem]">Descubre más</span>
+    <span
+      class="flex h-9 w-6 items-start justify-center rounded-full border border-paper/40 p-1.5"
+    >
+      <span class="scroll-dot h-1.5 w-1.5 rounded-full bg-gold"></span>
+    </span>
+  </a>
+</section>
+
+<style>
+  @keyframes scroll-dot {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+  }
+
+  .scroll-dot {
+    animation: scroll-dot 1.8s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const bg = document.getElementById('hero-bg');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (bg && !prefersReducedMotion) {
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        bg.style.transform = `translate3d(0, ${y * 0.18}px, 0) scale(1.08)`;
+      }
+      ticking = false;
+    };
+    update();
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+  }
+</script>

@@ -1,0 +1,123 @@
+---
+import { Icon } from 'astro-icon/components';
+import StarIcon from './StarIcon.astro';
+import { testimonials, site } from '../lib/site';
+---
+
+<section id="opiniones" class="bg-graphite py-24 sm:py-32">
+  <div class="container-editorial">
+    <div class="reveal flex flex-col items-center text-center">
+      <p class="eyebrow text-gold">Opiniones</p>
+      <h2 class="mt-4 max-w-2xl text-balance font-display text-3xl font-bold leading-tight text-paper sm:text-4xl md:text-5xl">
+        La confianza de quienes ya vivieron la experiencia.
+      </h2>
+      <div class="mt-5 flex items-center gap-2">
+        <div class="flex gap-0.5" aria-hidden="true">
+          {Array.from({ length: 5 }).map(() => <StarIcon class="h-4 w-4 text-gold" />)}
+        </div>
+        <span class="text-sm font-medium text-paper/80">
+          {site.rating} · {site.reviewCount}+ reseñas
+        </span>
+      </div>
+    </div>
+
+    <div class="reveal relative mt-14">
+      <div id="testimonial-viewport" class="overflow-hidden">
+        <div id="testimonial-container" class="flex">
+          {
+            testimonials.map((testimonial) => (
+              <div class="min-w-0 flex-[0_0_100%] px-2 sm:flex-[0_0_60%] lg:flex-[0_0_44%]">
+                <figure class="flex h-full flex-col rounded-2xl bg-ink p-8 sm:p-10">
+                  <Icon name="lucide:quote" class="h-8 w-8 text-gold" aria-hidden="true" />
+                  <blockquote class="mt-6 flex-1 text-pretty font-display text-xl leading-snug text-paper sm:text-2xl">
+                    {testimonial.quote}
+                  </blockquote>
+                  <figcaption class="mt-8 flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-graphite">
+                      <Icon name="lucide:user-round" class="h-5 w-5 text-gold" aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p class="text-sm font-semibold text-paper">{testimonial.author}</p>
+                      <div class="mt-0.5 flex gap-0.5" aria-hidden="true">
+                        {Array.from({ length: 5 }).map(() => (
+                          <StarIcon class="h-3 w-3 text-gold" />
+                        ))}
+                      </div>
+                    </div>
+                  </figcaption>
+                </figure>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="mt-8 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          id="testimonial-prev"
+          class="flex h-11 w-11 items-center justify-center rounded-full border border-paper/25 text-paper transition-colors hover:border-gold hover:text-gold"
+          aria-label="Reseña anterior"
+        >
+          <Icon name="lucide:chevron-left" class="h-5 w-5" aria-hidden="true" />
+        </button>
+        <div id="testimonial-dots" class="flex items-center gap-2"></div>
+        <button
+          type="button"
+          id="testimonial-next"
+          class="flex h-11 w-11 items-center justify-center rounded-full border border-paper/25 text-paper transition-colors hover:border-gold hover:text-gold"
+          aria-label="Siguiente reseña"
+        >
+          <Icon name="lucide:chevron-right" class="h-5 w-5" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import EmblaCarousel from 'embla-carousel';
+  import Autoplay from 'embla-carousel-autoplay';
+
+  const viewport = document.getElementById('testimonial-viewport');
+  const prevBtn = document.getElementById('testimonial-prev');
+  const nextBtn = document.getElementById('testimonial-next');
+  const dotsContainer = document.getElementById('testimonial-dots');
+
+  if (viewport) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const plugins = prefersReducedMotion
+      ? []
+      : [Autoplay({ delay: 5500, stopOnInteraction: true, stopOnMouseEnter: true })];
+
+    const embla = EmblaCarousel(viewport, { loop: true, align: 'center' }, plugins);
+
+    const slideCount = embla.scrollSnapList().length;
+    const dots: HTMLButtonElement[] = [];
+
+    for (let i = 0; i < slideCount; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Ir a la reseña ${i + 1}`);
+      dot.className = 'h-2 w-2 rounded-full bg-paper/30 transition-colors';
+      dot.addEventListener('click', () => embla.scrollTo(i));
+      dotsContainer?.appendChild(dot);
+      dots.push(dot);
+    }
+
+    const updateDots = () => {
+      const selected = embla.selectedScrollSnap();
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('bg-gold', i === selected);
+        dot.classList.toggle('bg-paper/30', i !== selected);
+      });
+    };
+
+    embla.on('select', updateDots);
+    updateDots();
+
+    prevBtn?.addEventListener('click', () => embla.scrollPrev());
+    nextBtn?.addEventListener('click', () => embla.scrollNext());
+  }
+</script>

@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import ctaImage from '../assets/images/el-legado-barberia-3.jpg';
+import { whatsappLink } from '../lib/site';
+---
+
+<section class="relative overflow-hidden bg-ink py-28 sm:py-36">
+  <div class="absolute inset-0">
+    <Image
+      src={ctaImage}
+      alt="Barbero de El Legado trabajando con total concentración en el corte de un cliente"
+      class="h-full w-full object-cover"
+      widths={[640, 1024, 1600]}
+      sizes="100vw"
+      loading="lazy"
+    />
+  </div>
+  <div class="absolute inset-0 bg-ink/80" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/70" aria-hidden="true"></div>
+
+  <div class="reveal container-editorial relative z-10 flex flex-col items-center text-center">
+    <Icon name="lucide:scissors" class="h-8 w-8 text-gold" aria-hidden="true" />
+    <h2 class="mt-6 max-w-2xl text-balance font-display text-4xl font-bold leading-tight text-paper sm:text-5xl">
+      Tu próximo corte comienza aquí.
+    </h2>
+    <p class="mt-5 max-w-xl text-pretty text-base leading-relaxed text-paper/75 sm:text-lg">
+      Agenda en cualquiera de nuestras cuatro sucursales y vive la experiencia El Legado.
+    </p>
+    <a
+      href={whatsappLink('Hola, quiero reservar una cita en El Legado Barbería.')}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-gold mt-9 !px-10 !py-4 !text-base"
+    >
+      <Icon name="lucide:message-circle" class="h-5 w-5" aria-hidden="true" />
+      Reservar por WhatsApp
+    </a>
+  </div>
+</section>

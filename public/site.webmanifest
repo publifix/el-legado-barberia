@@ -1,0 +1,15 @@
+{
+  "name": "El Legado Barbería",
+  "short_name": "El Legado",
+  "description": "Barbería premium en Querétaro. Cortes de precisión, ritual de barba y una experiencia masculina de alto nivel.",
+  "start_url": "/el-legado-barberia/",
+  "scope": "/el-legado-barberia/",
+  "display": "standalone",
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "lang": "es-MX",
+  "icons": [
+    { "src": "/el-legado-barberia/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/el-legado-barberia/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

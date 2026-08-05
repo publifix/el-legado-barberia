@@ -1,0 +1,96 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import logoMark from '../assets/images/logo-mark-white.png';
+import { site, navLinks, whatsappLink, defaultWhatsappMessage } from '../lib/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-ink pt-20">
+  <div class="container-editorial">
+    <div class="grid gap-12 border-b border-paper/10 pb-14 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <a href="#inicio" class="flex items-center gap-3" aria-label={`${site.name} — Inicio`}>
+          <Image src={logoMark} alt="" role="presentation" width={36} height={36} class="h-8 w-8 object-contain" />
+          <span class="font-display text-base font-bold text-paper">EL LEGADO</span>
+        </a>
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
+          Barbería premium en Querétaro. Técnica, asesoría personalizada y un ambiente
+          hecho para quedarse.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="eyebrow text-paper/50">Navegación</h3>
+        <ul class="mt-5 space-y-3">
+          {
+            navLinks.map((link) => (
+              <li>
+                <a href={link.href} class="text-sm text-paper/70 transition-colors hover:text-gold">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="eyebrow text-paper/50">Contacto</h3>
+        <ul class="mt-5 space-y-3 text-sm text-paper/70">
+          <li>
+            <a href={`tel:${site.phoneE164}`} class="transition-colors hover:text-gold">
+              {site.phoneDisplay}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${site.email}`} class="transition-colors hover:text-gold">
+              {site.email}
+            </a>
+          </li>
+          <li>
+            <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-gold">
+              {site.instagramHandle}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="eyebrow text-paper/50">Síguenos y agenda</h3>
+        <div class="mt-5 flex gap-3">
+          <a
+            href={whatsappLink(defaultWhatsappMessage)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Agendar por WhatsApp"
+            class="flex h-11 w-11 items-center justify-center rounded-full bg-graphite text-paper transition-colors hover:bg-gold hover:text-ink"
+          >
+            <Icon name="lucide:message-circle" class="h-5 w-5" aria-hidden="true" />
+          </a>
+          <a
+            href={site.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Síguenos en Instagram"
+            class="flex h-11 w-11 items-center justify-center rounded-full bg-graphite text-paper transition-colors hover:bg-gold hover:text-ink"
+          >
+            <Icon name="lucide:instagram" class="h-5 w-5" aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-4 py-8 text-center">
+      <p class="font-display text-lg text-paper">
+        El estilo permanece. <span class="text-gold">El legado continúa.</span>
+      </p>
+      <div class="flex flex-col items-center gap-2 text-xs text-paper/50 sm:flex-row sm:gap-4">
+        <span>© {year} El Legado Barbería. Todos los derechos reservados.</span>
+        <span class="hidden sm:inline">·</span>
+        <a href="#contacto" class="transition-colors hover:text-gold">Aviso de privacidad</a>
+      </div>
+    </div>
+  </div>
+</footer>

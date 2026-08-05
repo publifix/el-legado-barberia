@@ -1,0 +1,159 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { images } from '../lib/images';
+
+const galleryItems = [
+  { key: 'barberia-6', alt: 'Barbero perfilando barba frente al letrero de El Legado Barbería' },
+  { key: 'barberia-2', alt: 'Interior de El Legado Barbería con iluminación cálida y acero negro' },
+  { key: 'hero', alt: 'Barbero afeitando con navaja a un cliente en El Legado Barbería' },
+  { key: 'barberia-4', alt: 'Navaja y brocha de afeitar clásicas sobre madera natural' },
+  { key: 'barberia-1', alt: 'Aplicación de espuma de afeitar a un cliente en El Legado Barbería' },
+  { key: 'barberia-5', alt: 'Pomada profesional El Legado y navaja sobre mesa de madera' },
+  { key: 'barberia-3', alt: 'Barbero de El Legado realizando un corte de precisión' },
+] as const;
+
+const lightboxImages = await Promise.all(
+  galleryItems.map((item) =>
+    getImage({ src: images[item.key], width: 1600, quality: 85, format: 'webp' })
+  )
+);
+---
+
+<section id="galeria" class="bg-ivory py-24 text-ink sm:py-32">
+  <div class="container-editorial">
+    <div class="reveal max-w-2xl">
+      <p class="eyebrow text-ink/60">Galería</p>
+      <h2 class="mt-4 text-balance font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+        El Legado, en imágenes.
+      </h2>
+      <p class="mt-5 text-pretty text-base leading-relaxed text-ink/70 sm:text-lg">
+        Un vistazo real a nuestros espacios, nuestro trabajo y el detalle que ponemos en
+        cada visita.
+      </p>
+    </div>
+
+    <ul
+      id="gallery-grid"
+      class="reveal mt-14 columns-2 gap-4 sm:columns-3 [&>li]:mb-4 [&>li]:break-inside-avoid"
+    >
+      {
+        galleryItems.map((item, index) => (
+          <li>
+            <button
+              type="button"
+              data-gallery-open
+              data-index={index}
+              class="group relative block w-full overflow-hidden rounded-xl"
+              aria-label={`Ampliar fotografía: ${item.alt}`}
+            >
+              <Image
+                src={images[item.key]}
+                alt={item.alt}
+                class="w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                widths={[300, 450, 650]}
+                sizes="(min-width: 640px) 30vw, 45vw"
+                loading="lazy"
+              />
+              <span class="absolute inset-0 flex items-center justify-center bg-ink/0 transition-colors duration-300 group-hover:bg-ink/40">
+                <Icon
+                  name="lucide:expand"
+                  class="h-7 w-7 text-paper opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <dialog
+    id="lightbox"
+    class="m-auto max-h-none max-w-none overscroll-contain bg-transparent p-0 backdrop:bg-ink/90 open:flex"
+    aria-label="Visor de imágenes ampliado"
+  >
+    <div class="relative flex h-dvh w-screen items-center justify-center p-4 sm:p-10">
+      <button
+        type="button"
+        data-gallery-close
+        class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-graphite/80 text-paper sm:right-8 sm:top-8"
+        aria-label="Cerrar visor de imágenes"
+      >
+        <Icon name="lucide:x" class="h-5 w-5" aria-hidden="true" />
+      </button>
+
+      <button
+        type="button"
+        data-gallery-prev
+        class="absolute left-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-graphite/80 text-paper sm:left-6"
+        aria-label="Imagen anterior"
+      >
+        <Icon name="lucide:chevron-left" class="h-6 w-6" aria-hidden="true" />
+      </button>
+
+      <img
+        id="lightbox-image"
+        src=""
+        alt=""
+        class="max-h-full max-w-full rounded-lg object-contain"
+      />
+
+      <button
+        type="button"
+        data-gallery-next
+        class="absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-graphite/80 text-paper sm:right-6"
+        aria-label="Siguiente imagen"
+      >
+        <Icon name="lucide:chevron-right" class="h-6 w-6" aria-hidden="true" />
+      </button>
+    </div>
+  </dialog>
+</section>
+
+<script define:vars={{ sources: lightboxImages.map((img) => img.src), alts: galleryItems.map((i) => i.alt) }}>
+  const dialog = document.getElementById('lightbox');
+  const imgEl = document.getElementById('lightbox-image');
+  const openButtons = document.querySelectorAll('[data-gallery-open]');
+  let currentIndex = 0;
+
+  const show = (index) => {
+    currentIndex = (index + sources.length) % sources.length;
+    if (imgEl) {
+      imgEl.src = sources[currentIndex];
+      imgEl.alt = alts[currentIndex];
+    }
+  };
+
+  openButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const index = Number(btn.getAttribute('data-index'));
+      show(index);
+      dialog?.showModal();
+    });
+  });
+
+  document.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog?.close());
+  document.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(currentIndex - 1));
+  document.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(currentIndex + 1));
+
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+
+  dialog?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') show(currentIndex + 1);
+    if (e.key === 'ArrowLeft') show(currentIndex - 1);
+  });
+</script>
+
+<style>
+  dialog#lightbox {
+    border: none;
+  }
+
+  dialog#lightbox[open] {
+    display: flex;
+  }
+</style>
